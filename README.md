@@ -11,6 +11,7 @@ A simple plugin to create a visitor UUID server cookie named _aw_master_id.
     - [Bearer](#bearer)
     - [Add exception](#add-exception)
     - [Current exceptions](#current-exceptions)
+    - [Gitleaks](#gitleaks)
   - [Screenshots](#screenshots)
   - [Changelog](#changelog)
   - [Upgrade Notice](#upgrade-notice)
