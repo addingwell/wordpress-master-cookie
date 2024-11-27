@@ -24,7 +24,7 @@ The cookie lifetime is set to 13 months.
 - Contributors: Addingwell
 - Tags: uuid, cookie, visitor, tracking
 - Requires at least: 4.6
-- Tested up to: 5.7
+- Tested up to: 6.7.1
 - Requires PHP: 5.6
 - Stable tag: trunk
 - License: GPLv2 or later
@@ -32,7 +32,7 @@ The cookie lifetime is set to 13 months.
 
 ## Installation
 
-1. Upload the plugin files to the `/wp-content/plugins/visitor-uuid-cookie` directory, or install the plugin through the WordPress plugins screen directly.
+1. Upload the plugin files to the `/wp-content/plugins/wordpress-master-cookie` directory, or install the plugin through the WordPress plugins screen directly.
 2. Activate the plugin through the 'Plugins' screen in WordPress.
 
 ## Frequently Asked Questions
