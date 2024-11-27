@@ -12,9 +12,9 @@ document.addEventListener("DOMContentLoaded", function() {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    console.log(data.data); // Optional: Log success message
+                    console.log("Cookie _aw_master_id successfully set"); // Optional: Log success message
                 }
             })
-            .catch(error => console.error('Error setting cookie:', error));
+            .catch(error => console.error("Error setting the cookie _aw_master_id"));
     }
 });
