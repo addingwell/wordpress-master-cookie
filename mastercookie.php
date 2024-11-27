@@ -2,26 +2,36 @@
 /**
  * Plugin Name: Addingwell - Visitor UUID Cookie
  * Description: A simple plugin to create a visitor UUID server cookie named "_aw_master_id" with 13 months lifetime
- * Version: 1.0
+ * Version: 1.1
  * Author: Addingwell
  * Author URI: https://www.addingwell.com/
  */
 
-// Hook to initialize the UUID cookie when WordPress initializes
+if (!defined('ABSPATH')) exit; // Exit if accessed directly
 
-function set_aw_master_id() {
+function dynamic_master_cookie_enqueue_script() {
+    wp_enqueue_script('mastercookie-js', plugin_dir_url(__FILE__) . 'mastercookie.js', null, null, true);
+
+    wp_localize_script('mastercookie-js', 'dynamic_cookie_data', array(
+        'ajax_url' => admin_url('admin-ajax.php'),
+    ));
+}
+add_action('wp_enqueue_scripts', 'dynamic_master_cookie_enqueue_script');
+
+// Handle AJAX request to set the cookie
+function dynamic_master_cookie_ajax_handler() {
     $cookieName = '_aw_master_id';
     if (!isset($_COOKIE[$cookieName])) {
+        $cookieLifetime = time() + (60 * 60 * 24 * 30 * 13);
+        $domain = getMainDomain($_SERVER['SERVER_NAME']);
         $cookieValue = generateUUID();
+        setcookie($cookieName, $cookieValue, $cookieLifetime, '/', $domain, true, true);
+        wp_send_json_success('Cookie set successfully.');
     } else {
-        $cookieValue = $_COOKIE[$cookieName];
+        wp_send_json_success('Cookie already exists.');
     }
-
-    $cookieLifetime = time() + (60 * 60 * 24 * 30 * 13);
-    $domain = getMainDomain($_SERVER['SERVER_NAME']);
-    setcookie($cookieName, $cookieValue, $cookieLifetime, '/', $domain, true, true);
+    wp_die(); // Always die after handling AJAX
 }
-
 function getMainDomain($url) {
     $composedTlds = [
         'co.uk', 'gov.uk', 'ac.uk', 'org.uk', 'net.uk', 'sch.uk', 'nhs.uk', 'police.uk',
@@ -65,8 +75,7 @@ function getMainDomain($url) {
     // Default to last two parts if no composed TLD matches
     return implode('.', array_slice($parts, -2));
 }
-function generateUUID()
-{
+function generateUUID() {
     return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
         mt_rand(0, 0xFFFF), mt_rand(0, 0xFFFF),
         mt_rand(0, 0xFFFF),
@@ -76,4 +85,5 @@ function generateUUID()
     );
 }
 
-add_action('init', 'set_aw_master_id');
+add_action('wp_ajax_set_dynamic_master_cookie', 'dynamic_master_cookie_ajax_handler');
+add_action('wp_ajax_nopriv_set_dynamic_master_cookie', 'dynamic_master_cookie_ajax_handler');
